@@ -9,66 +9,70 @@ import SwiftUI
 
 @MainActor
 final class DashboardViewModel: ObservableObject {
-  @Published var fullname: String = ""
-  @Published var email: String = ""
-  @Published var phone: String = ""
-  @Published var role: String = ""
-  
-  func fetchData() async throws {
-    let auth = try AuthManager.instance.getAuthUser()
-    let result = try await AuthManager.instance.getFSUser(user: auth)
-    self.email = result.email ?? "Loading..."
-    self.fullname = result.fullname ?? "Loading..."
-    self.phone = result.phone ?? ""
-    self.role = result.role ?? ""
-  }
+    @Published var data: [ReportModel] = []
+    
+    func loadReports() async throws {
+        self.data = try await ReportManager.instance.loadAllReports()
+    }
 }
 
 struct DashboardView: View {
-  @EnvironmentObject private var router: Router
-  @StateObject private var viewModel = DashboardViewModel()
-  
+    @Environment(\.colorScheme) var colorScheme
+    @StateObject private var viewModel = MyReportViewModel()
+    
+    let columnSize: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10), count: 2)
     var body: some View {
-      NavigationStack {
-        ScrollView(.vertical) {
-          VStack(alignment: .leading) {
-            Text("\(viewModel.fullname)")
-              .font(.title)
-            Text("\(viewModel.role)")
-              .font(.headline)
-            Divider()
-            Text(verbatim: "\(viewModel.email)")
-            Text("\(viewModel.phone)")
-            Button(action: {
-              Task {
-                do {
-                  try AuthManager.instance.logoutUser()
-                  withAnimation {
-                    self.router.currentPage = .login
-                  }
+        return AnyView(
+            NavigationStack {
+                ScrollView(.vertical, showsIndicators: false){
+                    LazyVGrid(columns: columnSize) {
+                        ForEach(viewModel.data, id: \.self) { each in
+                            NavigationLink(destination: DetailReportView(data: each)) {
+                                CardReportView(data: each)
+                            }
+                        }
+                    }
+                    .padding(.top, 20)
+                    .padding(.horizontal)
                 }
-              }
-            }, label: {
-              CustomButtonView(name: "Logout")
-            })
-          }
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .padding(.horizontal)
-        }
-        .onAppear(perform: {
-          Task {
-            do {
-              try await viewModel.fetchData()
+                .navigationBarItems(
+                    trailing: NavigationLink(
+                        destination: AddReportView(),
+                        label: {
+                            Image(systemName: "plus")
+                                .foregroundStyle(.white)
+                        }
+                    )
+                )
+                .onAppear(perform: {
+                    Task {
+                        do {
+                            viewModel.userId = try AuthManager.instance.getAuthUser().uid
+                            try await viewModel.loadReports()
+                        } catch {
+                            print("Error fetching all data when view appear:", error.localizedDescription)
+                        }
+                    }
+                })
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack {
+                            Text("Lapor Book")
+                                .font(.custom("Poppins-Bold", size: 20))
+                                .foregroundColor(.white)
+                        }
+                    }
+                }
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
             }
-          }
-        })
-        .navigationTitle("Profile")
-      }
+            
+        )
     }
 }
 
 #Preview {
-  NavigationStack {
     DashboardView()
-  }
 }

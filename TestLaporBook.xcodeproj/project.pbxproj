@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4918BD852B48A72F002DCE31 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918BD842B48A72F002DCE31 /* ProfileView.swift */; };
+		4918BD892B48CF37002DCE31 /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918BD882B48CF37002DCE31 /* DataView.swift */; };
 		493FB2692B45624A001D41A8 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FB2682B45624A001D41A8 /* ImagePicker.swift */; };
 		493FB26B2B456349001D41A8 /* ReportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FB26A2B456349001D41A8 /* ReportManager.swift */; };
 		493FB26D2B456374001D41A8 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FB26C2B456374001D41A8 /* StorageManager.swift */; };
 		493FB26F2B4563A1001D41A8 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FB26E2B4563A1001D41A8 /* LocationManager.swift */; };
-		493FB2712B45642E001D41A8 /* AllReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FB2702B45642E001D41A8 /* AllReportView.swift */; };
 		493FB2732B45644A001D41A8 /* ReportCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FB2722B45644A001D41A8 /* ReportCardView.swift */; };
 		493FB2752B456467001D41A8 /* ReportDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FB2742B456467001D41A8 /* ReportDetailView.swift */; };
 		49B888252B3C74C200AFE619 /* TestLaporBookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B888242B3C74C200AFE619 /* TestLaporBookApp.swift */; };
@@ -61,11 +62,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4918BD842B48A72F002DCE31 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		4918BD882B48CF37002DCE31 /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		493FB2682B45624A001D41A8 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		493FB26A2B456349001D41A8 /* ReportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportManager.swift; sourceTree = "<group>"; };
 		493FB26C2B456374001D41A8 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		493FB26E2B4563A1001D41A8 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		493FB2702B45642E001D41A8 /* AllReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllReportView.swift; sourceTree = "<group>"; };
 		493FB2722B45644A001D41A8 /* ReportCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCardView.swift; sourceTree = "<group>"; };
 		493FB2742B456467001D41A8 /* ReportDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailView.swift; sourceTree = "<group>"; };
 		49B888212B3C74C200AFE619 /* TestLaporBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestLaporBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +128,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4918BD832B48918C002DCE31 /* Extention */ = {
+			isa = PBXGroup;
+			children = (
+				49B888782B3C80EE00AFE619 /* Constans.swift */,
+				49B888742B3C809D00AFE619 /* Extensions.swift */,
+				49B888762B3C80CD00AFE619 /* Templates.swift */,
+			);
+			path = Extention;
+			sourceTree = "<group>";
+		};
+		4918BD862B48C055002DCE31 /* Auntetication */ = {
+			isa = PBXGroup;
+			children = (
+				4918BD8B2B48E5D1002DCE31 /* Main */,
+				4918BD832B48918C002DCE31 /* Extention */,
+			);
+			path = Auntetication;
+			sourceTree = "<group>";
+		};
+		4918BD872B48CEE5002DCE31 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				493FB2682B45624A001D41A8 /* ImagePicker.swift */,
+				493FB2722B45644A001D41A8 /* ReportCardView.swift */,
+				4918BD882B48CF37002DCE31 /* DataView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		4918BD8B2B48E5D1002DCE31 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				49B888722B3C805D00AFE619 /* ViewController.swift */,
+				49B8887C2B3C813700AFE619 /* LoginView.swift */,
+				49B8887A2B3C811B00AFE619 /* RegisterView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		49B888182B3C74C200AFE619 = {
 			isa = PBXGroup;
 			children = (
@@ -150,7 +191,8 @@
 				49B888282B3C74C300AFE619 /* Assets.xcassets */,
 				49B888322B3C78A900AFE619 /* GoogleService-Info.plist */,
 				49B8886B2B3C7E0C00AFE619 /* Manager */,
-				49B8886C2B3C7E2300AFE619 /* Utilities */,
+				4918BD862B48C055002DCE31 /* Auntetication */,
+				4918BD872B48CEE5002DCE31 /* Component */,
 				49B8886D2B3C7E4A00AFE619 /* View */,
 				49B8882A2B3C74C300AFE619 /* Preview Content */,
 			);
@@ -168,8 +210,8 @@
 		49B8886B2B3C7E0C00AFE619 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				49B8886E2B3C800A00AFE619 /* AuthManager.swift */,
 				49B888702B3C802A00AFE619 /* Model.swift */,
+				49B8886E2B3C800A00AFE619 /* AuthManager.swift */,
 				493FB26A2B456349001D41A8 /* ReportManager.swift */,
 				493FB26C2B456374001D41A8 /* StorageManager.swift */,
 				493FB26E2B4563A1001D41A8 /* LocationManager.swift */,
@@ -177,29 +219,14 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
-		49B8886C2B3C7E2300AFE619 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				49B888722B3C805D00AFE619 /* ViewController.swift */,
-				49B888742B3C809D00AFE619 /* Extensions.swift */,
-				49B888762B3C80CD00AFE619 /* Templates.swift */,
-				49B888782B3C80EE00AFE619 /* Constans.swift */,
-				493FB2682B45624A001D41A8 /* ImagePicker.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
 		49B8886D2B3C7E4A00AFE619 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				49B8887A2B3C811B00AFE619 /* RegisterView.swift */,
-				49B8887C2B3C813700AFE619 /* LoginView.swift */,
+				4918BD842B48A72F002DCE31 /* ProfileView.swift */,
 				49B8887E2B3C815E00AFE619 /* DashboardView.swift */,
-				49B888822B3C81AA00AFE619 /* AddReportView.swift */,
-				493FB2702B45642E001D41A8 /* AllReportView.swift */,
-				493FB2722B45644A001D41A8 /* ReportCardView.swift */,
-				493FB2742B456467001D41A8 /* ReportDetailView.swift */,
 				49B888802B3C818300AFE619 /* MyReportView.swift */,
+				49B888822B3C81AA00AFE619 /* AddReportView.swift */,
+				493FB2742B456467001D41A8 /* ReportDetailView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -312,6 +339,7 @@
 				49B8887B2B3C811B00AFE619 /* RegisterView.swift in Sources */,
 				493FB26F2B4563A1001D41A8 /* LocationManager.swift in Sources */,
 				49B888732B3C805D00AFE619 /* ViewController.swift in Sources */,
+				4918BD892B48CF37002DCE31 /* DataView.swift in Sources */,
 				49B888752B3C809D00AFE619 /* Extensions.swift in Sources */,
 				493FB26B2B456349001D41A8 /* ReportManager.swift in Sources */,
 				493FB2732B45644A001D41A8 /* ReportCardView.swift in Sources */,
@@ -319,7 +347,6 @@
 				493FB2752B456467001D41A8 /* ReportDetailView.swift in Sources */,
 				49B888792B3C80EE00AFE619 /* Constans.swift in Sources */,
 				49B888272B3C74C200AFE619 /* ContentView.swift in Sources */,
-				493FB2712B45642E001D41A8 /* AllReportView.swift in Sources */,
 				49B8886F2B3C800A00AFE619 /* AuthManager.swift in Sources */,
 				49B8887F2B3C815E00AFE619 /* DashboardView.swift in Sources */,
 				49B888772B3C80CD00AFE619 /* Templates.swift in Sources */,
@@ -328,6 +355,7 @@
 				49B888812B3C818300AFE619 /* MyReportView.swift in Sources */,
 				49B888712B3C802A00AFE619 /* Model.swift in Sources */,
 				49B888832B3C81AA00AFE619 /* AddReportView.swift in Sources */,
+				4918BD852B48A72F002DCE31 /* ProfileView.swift in Sources */,
 				493FB26D2B456374001D41A8 /* StorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

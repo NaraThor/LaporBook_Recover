@@ -9,69 +9,71 @@ import SwiftUI
 
 @MainActor
 final class MyReportViewModel: ObservableObject {
-  @Published var data: [ReportModel] = []
-  @Published var userId: String = ""
-  
-  func loadReports() async throws {
-    self.data = try await ReportManager.instance.loadAllReports()
-  }
+    @Published var data: [ReportModel] = []
+    @Published var userId: String = ""
+    
+    func loadReports() async throws {
+        self.data = try await ReportManager.instance.loadAllReports()
+    }
 }
 
 struct MyReportView: View {
-  @Environment(\.colorScheme) var colorScheme
-  @State private var addReportSheet: Bool = false
-  @StateObject private var viewModel = MyReportViewModel()
-  
-  let columnSize: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10), count: 2)
-  var body: some View {
-    if addReportSheet {
-      Task {
-        do {
-          try await viewModel.loadReports()
-        }
-      }
+    @Environment(\.colorScheme) var colorScheme
+    @StateObject private var viewModel = MyReportViewModel()
+    
+    let columnSize: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10), count: 2)
+    var body: some View {
+        return AnyView(
+            NavigationStack {
+                ScrollView(.vertical, showsIndicators: false){
+                    LazyVGrid(columns: columnSize) {
+                        ForEach(viewModel.data, id: \.self) { each in
+                            NavigationLink(destination: DetailReportView(data: each)) {
+                                CardReportView(data: each)
+                            }
+                        }
+                    }
+                    .padding(.top, 20)
+                    .padding(.horizontal)
+                }
+                .navigationBarItems(
+                    trailing: NavigationLink(
+                        destination: AddReportView(),
+                        label: {
+                            Image(systemName: "plus")
+                                .foregroundStyle(.white)
+                        }
+                    )
+                )
+                .onAppear(perform: {
+                    Task {
+                        do {
+                            viewModel.userId = try AuthManager.instance.getAuthUser().uid
+                            try await viewModel.loadReports()
+                        } catch {
+                            print("Error fetching all data when view appear:", error.localizedDescription)
+                        }
+                    }
+                })
+                .padding(.top, 20)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack {
+                            Text("Lapor Book")
+                                .font(.custom("Poppins-Bold", size: 20))
+                                .foregroundColor(.white)
+                        }
+                    }
+                }
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
+            }
+        )
     }
-    return AnyView(
-      NavigationStack {
-        ScrollView(.vertical){
-          LazyVGrid(columns: columnSize) {
-            ForEach(viewModel.data, id: \.self) { each in
-              NavigationLink(destination: ReportDetailView(data: each)) {
-                ReportCard2View(data: each)
-              }
-            }
-          }
-          .padding(.horizontal)
-        }
-        .toolbar(content: {
-          ToolbarItem(placement: .topBarTrailing) {
-            Button(action: {
-              self.addReportSheet.toggle()
-            }) {
-              Image(systemName: "plus")
-            }
-          }
-        })
-        .sheet(isPresented: $addReportSheet, content: {
-          AddReportView(isPresented: $addReportSheet)
-        })
-        .onAppear(perform: {
-          Task {
-            do {
-              viewModel.userId = try AuthManager.instance.getAuthUser().uid
-              try await viewModel.loadReports()
-            } catch {
-              print("Error fetching all data when view appear:", error.localizedDescription)
-            }
-          }
-        })
-        .navigationTitle("Laporan Saya")
-      }
-    )
-  }
 }
 
 #Preview {
-  MyReportView()
+    MyReportView()
 }
-

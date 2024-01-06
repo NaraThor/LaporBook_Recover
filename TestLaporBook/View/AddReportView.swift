@@ -9,174 +9,217 @@ import SwiftUI
 
 @MainActor
 final class AddReportViewModel: ObservableObject {
-  @Published var judul: String = ""
-  @Published var deskripsi: String = ""
-  @Published var selected: String = "Jalanan"
-  @Published var image: Image? = nil
-  
-  func create(success: @escaping () -> (), failure: @escaping (Error) -> ()) {
-    Task {
-      do {
-        let render = ImageRenderer(content: image!)
-        let result = try await StorageManager.instance.saveImage(data: (render.uiImage?.jpegData(compressionQuality: 1))!)
-        try await ReportManager.instance.createReport(title: self.judul, instance: self.selected, desc: self.deskripsi, path: result.path, filename: result.filename)
-        success()
-      } catch {
-        failure(error)
-      }
+    @Published var judul: String = ""
+    @Published var deskripsi: String = ""
+    @Published var selected: String = "Pembangunan"
+    @Published var image: Image? = nil
+    
+    func create(success: @escaping () -> (), failure: @escaping (Error) -> ()) {
+        Task {
+            do {
+                let render = ImageRenderer(content: image!)
+                let result = try await StorageManager.instance.saveImage(data: (render.uiImage?.jpegData(compressionQuality: 1))!)
+                try await ReportManager.instance.createReport(title: self.judul, instance: self.selected, desc: self.deskripsi, path: result.path, filename: result.filename)
+                success()
+            } catch {
+                failure(error)
+            }
+        }
     }
-  }
 }
 
 struct AddReportView: View {
-  @Binding var isPresented: Bool
-  @StateObject private var viewModel = AddReportViewModel()
-  @StateObject var location = LocationManager()
-  @State private var imageSheetView: Bool = false
-  @State private var shouldPresentImagePicker: Bool = false
-  @State private var shouldPresentCamera: Bool = false
-  
-  @FocusState var descFocus: Bool
-  
-  var instances: [String] = ["Jalanan", "Pembangunan", "Revitalisasi", "Renovasi"]
-  var body: some View {
-    NavigationStack {
-      ScrollView(.vertical, content: {
-        VStack(spacing: 16) {
-          CustomTextFieldView(fieldBinding: $viewModel.judul, fieldName: "Judul Laporan")
-          VStack(alignment: .leading){
-            Text("Foto Laporan")
-              .fontWeight(.bold)
-            
-            if let userImage = viewModel.image {
-              userImage
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity)
-                .frame(height: 300)
-                .clipped()
-                .overlay(
-                  RoundedRectangle(cornerRadius: 14)
-                    .stroke(.gray, lineWidth: 2)
-                    .opacity(descFocus ? 1 : 0.5)
-                )
-                .cornerRadius(14)
-                .onTapGesture {
-                  self.imageSheetView.toggle()
-                }
-                .sheet(isPresented: $shouldPresentImagePicker) {
-                  SUImagePickerView(sourceType: self.shouldPresentCamera ? .camera : .photoLibrary, image: $viewModel.image, isPresented: self.$shouldPresentImagePicker)
-                }
-                .actionSheet(isPresented: $imageSheetView) { () -> ActionSheet in
-                  ActionSheet(title: Text("Pilih Foto"), message: Text("Pilih satu foto sebagai dokumentasi laporan"), buttons: [ActionSheet.Button.default(Text("Kamera"), action: {
-                    self.shouldPresentImagePicker = true
-                    self.shouldPresentCamera = true
-                  }), ActionSheet.Button.default(Text("Galeri..."), action: {
-                    self.shouldPresentImagePicker = true
-                    self.shouldPresentCamera = false
-                  }), ActionSheet.Button.cancel()])
-                }
-            } else {
-              VStack(spacing: 16) {
-                Image(systemName: "photo.on.rectangle.angled")
-                  .resizable()
-                  .aspectRatio(contentMode: .fit)
-                  .frame(maxWidth: .infinity)
-                  .frame(height: 100)
-                  .foregroundColor(.gray)
-                
-                Text("Tap disini untuk tambah/ganti foto...")
-                  .foregroundColor(.gray)
-              }
-              .frame(maxWidth: .infinity)
-              .frame(height: 300)
-              .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                  .stroke(.gray, lineWidth: 2)
-                  .opacity(descFocus ? 1 : 0.5)
-              )
-              .onTapGesture {
-                self.imageSheetView.toggle()
-              }
-              .sheet(isPresented: $shouldPresentImagePicker) {
-                SUImagePickerView(sourceType: self.shouldPresentCamera ? .camera : .photoLibrary, image: $viewModel.image, isPresented: self.$shouldPresentImagePicker)
-              }
-              .actionSheet(isPresented: $imageSheetView) { () -> ActionSheet in
-                ActionSheet(title: Text("Pilih Foto"), message: Text("Pilih satu foto sebagai dokumentasi laporan"), buttons: [ActionSheet.Button.default(Text("Kamera"), action: {
-                  self.shouldPresentImagePicker = true
-                  self.shouldPresentCamera = true
-                }), ActionSheet.Button.default(Text("Galeri..."), action: {
-                  self.shouldPresentImagePicker = true
-                  self.shouldPresentCamera = false
-                }), ActionSheet.Button.cancel()])
-              }
-            }
-          }
-          VStack(alignment: .leading) {
-            Text("Instansi")
-              .fontWeight(.bold)
-            Picker("Selected Instance", selection: $viewModel.selected) {
-              ForEach(instances, id: \.self) { each in
-                Text(each)
-              }
-            }
-            .frame(maxWidth: .infinity)
-            .pickerStyle(.wheel)
-            .overlay(
-              RoundedRectangle(cornerRadius: 14)
-                .stroke(.gray, lineWidth: 2)
-                .opacity(descFocus ? 1 : 0.5)
-            )
-          }
-          
-          VStack(alignment: .leading) {
-            Text("Deskripsi Laporan")
-              .fontWeight(.bold)
-            TextField("Deskripsikan laporan Anda di sini...", text: $viewModel.deskripsi, axis: .vertical)
-              .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
-              .padding()
-              .autocorrectionDisabled()
-              .textInputAutocapitalization(.never)
-              .keyboardType(.emailAddress)
-              .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                  .stroke(descFocus ? Color(hex: LB.AppColors.textFieldFocused) : .gray, lineWidth: 2)
-                  .opacity(descFocus ? 1 : 0.5)
-              )
-              .focused($descFocus)
-          }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal)
-      })
-      .toolbar(content: {
-        ToolbarItem(placement: .topBarLeading) {
-          Button(action: {
-            self.isPresented.toggle()
-          }, label: {
-            Text("Batal")
-          })
-        }
+    @Environment(\.presentationMode) var presentation
+    @StateObject private var viewModel = AddReportViewModel()
+    @StateObject var location = LocationManager()
+    @State private var imageSheetView: Bool = false
+    @State private var shouldPresentImagePicker: Bool = false
+    @State private var shouldPresentCamera: Bool = false
+    
+    @FocusState var descFocus: Bool
+    
+    var instances: [String] = ["Pembangunan", "Jalanan", "Pendidikan"]
+    var body: some View {
         
-        ToolbarItem(placement: .topBarTrailing) {
-          Button(action: {
-            viewModel.create() {
-              self.isPresented.toggle()
-            } failure: { err in
-              print("Error saving firestore / storage:", err.localizedDescription)
+    // Judul Laporan
+        NavigationStack {
+            ScrollView(.vertical, showsIndicators: false, content: {
+                VStack(alignment: .center) {
+                    Spacer()
+//                    Text("Judul Laporan")
+//                        .foregroundColor(.black)
+//                        .padding()
+//                        .multilineTextAlignment(.center)
+//                    
+//                        .frame(height: 10)
+                    CustomTextFieldView(fieldBinding: $viewModel.judul, fieldName: "Judul Laporan")
+                        .multilineTextAlignment(.leading)
+                        .padding(.bottom,15)
+                        .padding(.top,20)
+                    
+                    
+  //Images
+                    VStack(alignment: .leading){
+                        Text("Foto Pendukung")
+                            .font(.custom("Poppins-Bold", size: 14))
+                        
+                        if let userImage = viewModel.image {
+                            userImage
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 150)
+                                .clipped()
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .stroke(.gray, lineWidth: 2)
+                                        .opacity(descFocus ? 1 : 0.5)
+                                )
+                                .cornerRadius(14)
+                                .onTapGesture {
+                                    self.imageSheetView.toggle()
+                                }
+                                .sheet(isPresented: $shouldPresentImagePicker) {
+                                    SUImagePickerView(sourceType: self.shouldPresentCamera ? .camera : .photoLibrary, image: $viewModel.image, isPresented: self.$shouldPresentImagePicker)
+                                }
+                                .actionSheet(isPresented: $imageSheetView) { () -> ActionSheet in
+                                    ActionSheet(title: Text("Pilih Foto"), message: Text("Pilih satu foto sebagai dokumentasi laporan"), buttons: [ActionSheet.Button.default(Text("Kamera"), action: {
+                                        self.shouldPresentImagePicker = true
+                                        self.shouldPresentCamera = true
+                                    }), ActionSheet.Button.default(Text("Pilih dari Galeri"), action: {
+                                        self.shouldPresentImagePicker = true
+                                        self.shouldPresentCamera = false
+                                    }), ActionSheet.Button.cancel()])
+                                }
+                        } else {
+                            VStack(spacing: 16) {
+                                HStack{
+                                    Text("Pilih foto")
+                                        .font(.custom("Poppins-Regular", size: 14))
+                                        .foregroundColor(.gray)
+                                    Spacer()
+                                    Image(systemName: "photo.on.rectangle.angled")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(height: 25)
+                                        .foregroundColor(.gray)
+                                }
+                                .padding()
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 45)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .stroke(.gray, lineWidth: 2)
+                                    .opacity(descFocus ? 1 : 0.5)
+                            )
+                            .onTapGesture {
+                                self.imageSheetView.toggle()
+                            }
+                            .sheet(isPresented: $shouldPresentImagePicker) {
+                                SUImagePickerView(sourceType: self.shouldPresentCamera ? .camera : .photoLibrary, image: $viewModel.image, isPresented: self.$shouldPresentImagePicker)
+                            }
+                            .actionSheet(isPresented: $imageSheetView) { () -> ActionSheet in
+                                ActionSheet(title: Text("Pilih Foto"), message: Text("Pilih satu foto sebagai dokumentasi laporan"), buttons: [ActionSheet.Button.default(Text("Kamera"), action: {
+                                    self.shouldPresentImagePicker = true
+                                    self.shouldPresentCamera = true
+                                }), ActionSheet.Button.default(Text("Pilih dari Galeri"), action: {
+                                    self.shouldPresentImagePicker = true
+                                    self.shouldPresentCamera = false
+                                }), ActionSheet.Button.cancel()])
+                            }
+                        }
+                    }
+                    .padding(.bottom,15)
+                    
+                    
+//Instansi
+                    VStack(alignment: .leading) {
+                        Text("Instansi")
+                            .font(.custom("Poppins-Bold", size: 14))
+                        Picker("Selected Instance", selection: $viewModel.selected) {
+                            ForEach(instances, id: \.self) { each in
+                                Text(each)
+                                    .font(.custom("Poppins-Regular", size: 20))
+                            }
+                        }
+                        .frame(height: 100)
+                        .frame(maxWidth: .infinity)
+                        .pickerStyle(.wheel)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(.gray, lineWidth: 2)
+                                .opacity(descFocus ? 1 : 0.5)
+                        )
+                    }
+                    
+                    .padding(.bottom,15)
+                    
+  //Deskripsi lengkap
+                    VStack(alignment: .leading) {
+                        Text("Deskripsi Lengkap")
+                            .font(.custom("Poppins-Bold", size: 14))
+                            .multilineTextAlignment(.center)
+                        TextField("Deskripsikan semua di sini", text: $viewModel.deskripsi, axis: .vertical)
+                            .font(.custom("Poppins-Regular", size: 14))
+                            .frame(height: 100)
+                            .padding()
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                            .keyboardType(.emailAddress)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .stroke(descFocus ? Color(hex: LB.AppColors.primaryColor) : .gray, lineWidth: 2)
+                                    .opacity(descFocus ? 1 : 0.5)
+                            )
+                            .focused($descFocus)
+                    }
+   
+                    
+                    
+//Button
+                    
+                    
+                    Button(action: {
+                        viewModel.create() {
+                            presentation.wrappedValue.dismiss()
+                        } failure: { err in
+                            print("Error saving firestore / storage:", err.localizedDescription)
+                        }
+                        
+                    }, label: {
+                        CustomButtonView(name: "Tambah Laporan")
+                    })
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+            })
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack {
+                        Text("Kirim Laporan")
+                            .font(.custom("Poppins-Bold", size: 20))
+                            .foregroundColor(.white)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.white)
+                    }
+                }
             }
-            
-          }, label: {
-            Text("Tambah")
-          })
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
         }
-      })
-      .navigationTitle("Tambah Laporan")
     }
-  }
 }
 
 #Preview {
-  AddReportView(isPresented: .constant(true))
+    AddReportView()
 }
 
