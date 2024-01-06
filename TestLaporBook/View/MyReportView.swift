@@ -17,6 +17,8 @@ final class MyReportViewModel: ObservableObject {
     }
 }
 
+
+
 struct MyReportView: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel = MyReportViewModel()
@@ -29,12 +31,14 @@ struct MyReportView: View {
                     LazyVGrid(columns: columnSize) {
                         ForEach(viewModel.data, id: \.self) { each in
                             NavigationLink(destination: DetailReportView(data: each)) {
-                                CardReportView(data: each)
+                                ReportCardView(data: each)
                             }
                         }
                     }
-                    .padding(.top, 20)
                     .padding(.horizontal)
+            
+                    
+                    
                 }
                 .navigationBarItems(
                     trailing: NavigationLink(
@@ -45,6 +49,8 @@ struct MyReportView: View {
                         }
                     )
                 )
+                
+//Check
                 .onAppear(perform: {
                     Task {
                         do {
@@ -58,11 +64,16 @@ struct MyReportView: View {
                 .padding(.top, 20)
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarBackButtonHidden(true)
+                
+                
+                
+//Title
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Lapor Book")
-                                .font(.custom("Poppins-Bold", size: 20))
+                                .font(.system(size: 21))
+                                .fontWeight(.bold)
                                 .foregroundColor(.white)
                         }
                     }

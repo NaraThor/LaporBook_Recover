@@ -37,7 +37,7 @@ struct RegisterView: View {
                 Text("Create your profile to start your journey")
                     .font(.subheadline)
                     .opacity(0.3)
-                    .padding(.bottom,40)
+                
                 
                 
                 

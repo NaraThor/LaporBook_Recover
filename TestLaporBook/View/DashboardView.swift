@@ -28,7 +28,7 @@ struct DashboardView: View {
                     LazyVGrid(columns: columnSize) {
                         ForEach(viewModel.data, id: \.self) { each in
                             NavigationLink(destination: DetailReportView(data: each)) {
-                                CardReportView(data: each)
+                                ReportCardView(data: each)
                             }
                         }
                     }
@@ -56,11 +56,14 @@ struct DashboardView: View {
                 })
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarBackButtonHidden(true)
+                
+//Title
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Lapor Book")
-                                .font(.custom("Poppins-Bold", size: 20))
+                                .font(.system(size: 21))
+                                .fontWeight(.bold)
                                 .foregroundColor(.white)
                         }
                     }
