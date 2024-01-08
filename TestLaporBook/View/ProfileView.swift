@@ -84,8 +84,9 @@ struct ProfileView: View {
                     }, label: {
                         CustomButtonView(name: "Logout")
                             .clipShape(RoundedRectangle(cornerRadius: 1))
+                            .fontWeight(.bold)
                     })
-                    
+                    .fontWeight(.bold)
                     .padding()
                 }
                 

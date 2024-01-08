@@ -99,5 +99,7 @@ final class ReportManager {
     
     func delLike(reportId: String, likeId: String) async throws {
         try await Firestore.firestore().collection("report").document(reportId).collection("likes").document(likeId).delete()
+        
+        ////Mark
     }
 }

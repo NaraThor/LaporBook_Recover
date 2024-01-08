@@ -195,7 +195,7 @@ struct DetailReportView: View {
                     HStack{
                         Image(systemName: "person.fill")
                         VStack{
-                            Text("NamaLengkap")
+                            Text("Nama Pelapor")
                                 .font(.system(size: 14))
                             Text(data?.fullname ?? "")
                                 .font(.system(size: 12))
@@ -208,7 +208,7 @@ struct DetailReportView: View {
                             VStack(alignment: .leading){
                                 Text("Tanggal Lengkap")
                                     .font(.system(size: 14))
-                                Text(String(date: data?.date ?? Date(), format: "dd-mm-yy"))
+                                Text(String(date: data?.date ?? Date(), format: "DD-MM-YY"))
                                     .font(.system(size: 12))
                             }
                         }
@@ -341,6 +341,6 @@ struct DetailReportView: View {
 
 #Preview {
     NavigationStack {
-        DetailReportView(data: ReportModel(date: Date(), id: "12345", desc: "Deskripsi", imgFilename: "", imgPath: "", instance: "Suatu Instansi", title: "", userId: "", fullname: "Nama Pelapor", status: "Done", latitude: 0, longitude: 0))
+        DetailReportView(data: ReportModel(date: Date(), id: "12345", desc: "Deskripsi", imgFilename: "", imgPath: "", instance: "Suatu Instansi", title: "", userId: "", fullname: "Nama Lelapor", status: "Done", latitude: 0, longitude: 0))
     }
 }

@@ -201,6 +201,7 @@ struct AddReportView: View {
                         Text("Kirim Laporan")
                             .font(.system(size: 20))
                             .foregroundColor(.white)
+                            .fontWeight(.bold)
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {

@@ -38,7 +38,7 @@ struct RegisterView: View {
                     .font(.subheadline)
                     .opacity(0.3)
                 
-                                    
+                    .padding(.bottom,40)
                 
                 VStack(alignment: .leading, spacing:10) {
                     CustomTextFieldView(fieldBinding: $viewModel.nama, fieldName: "Nama")
