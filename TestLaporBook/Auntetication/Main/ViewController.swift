@@ -25,12 +25,12 @@ struct ViewController: View {
             VStack {
                 Image(systemName: "book.fill")
                     .font(.system(size: 80))
-                    .foregroundColor(Color(hex: LB.AppColors.primaryColor))
+                    .foregroundColor(Color(hex: LB.Colors.primaryColor))
                 Spacer()
                     .frame(height: 20)
                 Text("Lapor Book")
                     .font(.custom("Poppins-Bold", size: 30))
-                    .foregroundColor(Color(hex: LB.AppColors.primaryColor))
+                    .foregroundColor(Color(hex: LB.Colors.primaryColor))
                     .onAppear(perform: {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             withAnimation {
@@ -49,7 +49,7 @@ struct ViewController: View {
             TabView {
                 DashboardView()
                     .tabItem {
-                        Label("Dashboard", systemImage: "doc.text.image")
+                        Label("Dashboard", systemImage: "square.stack")
                     }
                 MyReportView()
                     .tabItem {

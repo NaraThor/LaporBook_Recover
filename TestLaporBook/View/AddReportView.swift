@@ -11,15 +11,17 @@ import SwiftUI
 final class AddReportViewModel: ObservableObject {
     @Published var judul: String = ""
     @Published var deskripsi: String = ""
-    @Published var selected: String = "Pembangunan"
+    @Published var selected: String = "Testo"
     @Published var image: Image? = nil
+    @Published var coordinatPoint: (Double, Double) = (0, 0)
     
     func create(success: @escaping () -> (), failure: @escaping (Error) -> ()) {
         Task {
             do {
                 let render = ImageRenderer(content: image!)
                 let result = try await StorageManager.instance.saveImage(data: (render.uiImage?.jpegData(compressionQuality: 1))!)
-                try await ReportManager.instance.createReport(title: self.judul, instance: self.selected, desc: self.deskripsi, path: result.path, filename: result.filename)
+                try await ReportManager.instance.createReport(title: self.judul, instance: self.selected, desc: self.deskripsi, path: result.path, filename: result.filename, lat: self.coordinatPoint.0, long: self.coordinatPoint.1)
+                success()
                 success()
             } catch {
                 failure(error)
@@ -169,16 +171,13 @@ struct AddReportView: View {
                             .keyboardType(.emailAddress)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 14)
-                                    .stroke(descFocus ? Color(hex: LB.AppColors.primaryColor) : .gray, lineWidth: 2)
+                                    .stroke(descFocus ? Color(hex: LB.Colors.primaryColor) : .gray, lineWidth: 2)
                                     .opacity(descFocus ? 1 : 0.5)
                             )
                             .focused($descFocus)
                     }
    
-                    
-                    
 //Button
-                    
                     
                     Button(action: {
                         viewModel.create() {
@@ -200,7 +199,7 @@ struct AddReportView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("Kirim Laporan")
-                            .font(.custom("Poppins-Bold", size: 20))
+                            .font(.system(size: 20))
                             .foregroundColor(.white)
                     }
                 }
@@ -214,7 +213,7 @@ struct AddReportView: View {
                 }
             }
             .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
+            .toolbarBackground(Color(hex: LB.Colors.primaryColor), for: .navigationBar)
         }
     }
 }

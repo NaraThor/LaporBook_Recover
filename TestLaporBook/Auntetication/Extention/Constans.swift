@@ -8,7 +8,7 @@
 import Foundation
 
 struct LB {
-    struct AppColors {
+    struct Colors {
         
         //Colour
         static let primaryColor = "F4A261"

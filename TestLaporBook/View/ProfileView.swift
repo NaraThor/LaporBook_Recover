@@ -47,15 +47,18 @@ struct ProfileView: View {
                         .padding(.top, 20)
                         .padding(.bottom, 6)
                     
+                    
+                    
                     Text(viewModel.fullName)
                         .multilineTextAlignment(.center)
                         .font(.largeTitle)
                         .fontWeight(.semibold)
+                        .padding()
                     
                     Text("admin")
                         .font(.headline)
                         .padding(.top, 6)
-                        .foregroundStyle(Color(hex: LB.AppColors.primaryColor))
+                        .foregroundStyle(Color(hex: LB.Colors.primaryColor))
                     
                     
                     
@@ -108,7 +111,7 @@ struct ProfileView: View {
                 }
             }
             .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
+            .toolbarBackground(Color(hex: LB.Colors.primaryColor), for: .navigationBar)
         }
     }
 }

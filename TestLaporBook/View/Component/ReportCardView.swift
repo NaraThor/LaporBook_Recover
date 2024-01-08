@@ -48,11 +48,12 @@ struct ReportCardView: View {
                         .frame(maxWidth: .infinity)
                         .overlay(.black)
                         .multilineTextAlignment(.center)
+                    
                     Text("\(data?.title ?? "Title")")
-                        .padding()
+                        .padding(4)
                         .foregroundStyle(colorScheme == .light ? .black : .white)
                         .lineLimit(2)
-                        .font(.title2)
+                        .font(.subheadline)
                         .fontWeight(.bold)
                         
                     Divider()
@@ -68,10 +69,13 @@ struct ReportCardView: View {
                                 .padding()
                                 .font(.system(size: 12))
                         }
+                        .frame(maxHeight: .infinity)
                         .background(getBackgroundColor(for: data?.status))
+                        
                         Divider()
-                            .frame(width: 2)
+                            .frame(width: 3)
                             .overlay(.black)
+                        
                         VStack{
                             Text("\(formatDate(data?.date ?? Date()))")
                                 .foregroundStyle(.white)
@@ -80,6 +84,7 @@ struct ReportCardView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .background(.accent)
+                        
                     }
                 }
             }
@@ -95,7 +100,7 @@ struct ReportCardView: View {
 //Date Thing
     func formatDate(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd MMM yyyy"
+        dateFormatter.dateFormat = "dd-MM-yy"
         return dateFormatter.string(from: date)
     }
     
@@ -104,19 +109,18 @@ struct ReportCardView: View {
     func getBackgroundColor(for status: String?) -> Color {
         switch status {
         case "Posted":
-            return Color(hex: LB.AppColors.successColor)
-//            return Color(hex: LB.AppColors.dangerColor)
+            return Color(hex: LB.Colors.dangerColor)
         case "Process":
-            return Color(hex: LB.AppColors.warningColor)
+            return Color(hex: LB.Colors.warningColor)
         case "Done":
-            return Color(hex: LB.AppColors.successColor)
+            return Color(hex: LB.Colors.successColor)
         default:
-            return Color(hex: LB.AppColors.successColor)
-            
-            //Testo
+            return Color.gray
         }
     }
 }
+
+
 
 #Preview {
     ReportCardView()

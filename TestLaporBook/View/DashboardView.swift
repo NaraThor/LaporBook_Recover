@@ -69,7 +69,7 @@ struct DashboardView: View {
                     }
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
+                .toolbarBackground(Color(hex: LB.Colors.primaryColor), for: .navigationBar)
             }
             
         )

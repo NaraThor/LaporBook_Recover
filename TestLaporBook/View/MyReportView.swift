@@ -17,8 +17,6 @@ final class MyReportViewModel: ObservableObject {
     }
 }
 
-
-
 struct MyReportView: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel = MyReportViewModel()
@@ -36,8 +34,6 @@ struct MyReportView: View {
                         }
                     }
                     .padding(.horizontal)
-            
-                    
                     
                 }
                 .navigationBarItems(
@@ -50,7 +46,7 @@ struct MyReportView: View {
                     )
                 )
                 
-//Check
+                //Check
                 .onAppear(perform: {
                     Task {
                         do {
@@ -67,7 +63,7 @@ struct MyReportView: View {
                 
                 
                 
-//Title
+                //Title
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
@@ -79,7 +75,7 @@ struct MyReportView: View {
                     }
                 }
                 .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
+                .toolbarBackground(Color(hex: LB.Colors.primaryColor), for: .navigationBar)
             }
         )
     }

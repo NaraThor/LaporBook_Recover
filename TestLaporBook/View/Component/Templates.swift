@@ -30,7 +30,7 @@ struct CustomTextFieldView: View {
                         .keyboardType(.emailAddress)
                         .overlay(
                             RoundedRectangle(cornerRadius: 14)
-                                .stroke(focus ? Color(hex: LB.AppColors.primaryColor) : .gray, lineWidth: 2)
+                                .stroke(focus ? Color(hex: LB.Colors.primaryColor) : .gray, lineWidth: 2)
                                 .opacity(focus ? 1 : 0.5)
                         )
                         .focused($focus)
@@ -43,7 +43,7 @@ struct CustomTextFieldView: View {
                         .keyboardType(keyboardType)
                         .overlay(
                             RoundedRectangle(cornerRadius: 14)
-                                .stroke(focus ? Color(hex: LB.AppColors.primaryColor) : .gray, lineWidth: 2)
+                                .stroke(focus ? Color(hex: LB.Colors.primaryColor) : .gray, lineWidth: 2)
                                 .opacity(focus ? 1 : 0.5)
                         )
                         .textInputAutocapitalization(.words)
@@ -72,7 +72,7 @@ struct CustomTextFieldView: View {
                 .frame(height: 45)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
-                        .stroke(focus ? Color(hex: LB.AppColors.primaryColor) : .gray, lineWidth: 2)
+                        .stroke(focus ? Color(hex: LB.Colors.primaryColor) : .gray, lineWidth: 2)
                         .opacity(focus ? 1 : 0.5)
                 )
             }
@@ -90,7 +90,7 @@ struct CustomButtonView: View {
             .padding()
             .font(.custom("Poppins-Bold", size: 20))
             .frame(maxWidth: .infinity)
-            .background(isDisabled ? (Color(hex: LB.AppColors.primaryColor)).opacity(0.5) :  (Color(hex: LB.AppColors.primaryColor)))
+            .background(isDisabled ? (Color(hex: LB.Colors.primaryColor)).opacity(0.5) :  (Color(hex: LB.Colors.primaryColor)))
             .foregroundStyle(.white)
             .fontWeight(.black)
             .clipShape(RoundedRectangle(cornerSize: CGSize(width: 50, height: 50)))
@@ -107,7 +107,7 @@ struct CustomButtonChangeView: View {
             .padding()
             .font(.custom("Poppins-Bold", size: 16))
             .frame(width: 200)
-            .background(isDisabled ? (Color(hex: LB.AppColors.primaryColor)).opacity(0.5) :  (Color(hex: LB.AppColors.primaryColor)))
+            .background(isDisabled ? (Color(hex: LB.Colors.primaryColor)).opacity(0.5) :  (Color(hex: LB.Colors.primaryColor)))
             .foregroundStyle(.white)
             .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
             .padding(.top, 30)
@@ -123,3 +123,4 @@ struct CustomButtonChangeView: View {
 #Preview {
     CustomTextFieldView(fieldBinding: .constant(""), fieldName: "Nama", isPassword: false)
 }
+

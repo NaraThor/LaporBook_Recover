@@ -24,10 +24,10 @@ struct DataView: View {
             Text(Data)
                 .textCase(.lowercase)
                 .fontWeight(.medium)
-                .foregroundColor(Color(hex: LB.AppColors.primaryColor))
+                .foregroundColor(Color(hex: LB.Colors.primaryColor))
             
             CustomDivider(height: 2)
-                .foregroundColor(Color(hex: LB.AppColors.primaryColor))
+                .foregroundColor(Color(hex: LB.Colors.primaryColor))
                 
             
         }

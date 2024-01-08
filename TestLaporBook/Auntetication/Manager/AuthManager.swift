@@ -20,7 +20,7 @@ final class AuthManager {
       "id": result.uid,
       "fullname": fullname,
       "phone": phone,
-      "role": "User"
+      "role": "admin"
     ]
     if let email = result.email {
       fsData["email"] = email

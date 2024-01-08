@@ -133,7 +133,6 @@
 			children = (
 				49B888782B3C80EE00AFE619 /* Constans.swift */,
 				49B888742B3C809D00AFE619 /* Extensions.swift */,
-				49B888762B3C80CD00AFE619 /* Templates.swift */,
 			);
 			path = Extention;
 			sourceTree = "<group>";
@@ -141,6 +140,7 @@
 		4918BD862B48C055002DCE31 /* Auntetication */ = {
 			isa = PBXGroup;
 			children = (
+				49B8886B2B3C7E0C00AFE619 /* Manager */,
 				4918BD8B2B48E5D1002DCE31 /* Main */,
 				4918BD832B48918C002DCE31 /* Extention */,
 			);
@@ -150,8 +150,9 @@
 		4918BD872B48CEE5002DCE31 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				493FB2682B45624A001D41A8 /* ImagePicker.swift */,
 				493FB2722B45644A001D41A8 /* ReportCardView.swift */,
+				49B888762B3C80CD00AFE619 /* Templates.swift */,
+				493FB2682B45624A001D41A8 /* ImagePicker.swift */,
 				4918BD882B48CF37002DCE31 /* DataView.swift */,
 			);
 			path = Component;
@@ -190,10 +191,8 @@
 				49B888262B3C74C200AFE619 /* ContentView.swift */,
 				49B888282B3C74C300AFE619 /* Assets.xcassets */,
 				49B888322B3C78A900AFE619 /* GoogleService-Info.plist */,
-				49B8886B2B3C7E0C00AFE619 /* Manager */,
-				4918BD862B48C055002DCE31 /* Auntetication */,
-				4918BD872B48CEE5002DCE31 /* Component */,
 				49B8886D2B3C7E4A00AFE619 /* View */,
+				4918BD862B48C055002DCE31 /* Auntetication */,
 				49B8882A2B3C74C300AFE619 /* Preview Content */,
 			);
 			path = TestLaporBook;
@@ -222,6 +221,7 @@
 		49B8886D2B3C7E4A00AFE619 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4918BD872B48CEE5002DCE31 /* Component */,
 				4918BD842B48A72F002DCE31 /* ProfileView.swift */,
 				49B8887E2B3C815E00AFE619 /* DashboardView.swift */,
 				49B888802B3C818300AFE619 /* MyReportView.swift */,
@@ -494,6 +494,7 @@
 				DEVELOPMENT_TEAM = XGVFACWZPQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -525,6 +526,7 @@
 				DEVELOPMENT_TEAM = XGVFACWZPQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -10,8 +10,13 @@ import MapKit
 import SDWebImageSwiftUI
 
 @MainActor
-final class DetailReportViewModel: ObservableObject {
-    @Published var userRole: String = ""
+final class ReportDetailView: ObservableObject {
+    @Published var user: FSUser = FSUser(uid: "", email: "", fullname: "", phone: "", role: "")
+    @Published var isLiked: Bool = false
+    
+    @Published var allLikes: [LikeModel] = []
+    @Published var like: LikeModel? = LikeModel(date: Date(), author: "", id: "")
+    
     func changeStatus(to newStatus: String, reportId: String) async throws {
         do {
             try await ReportManager.instance.changeStatus(to: newStatus, id: reportId)
@@ -19,12 +24,22 @@ final class DetailReportViewModel: ObservableObject {
             print("Error change status:", error.localizedDescription)
         }
     }
+    
+    func addLike(reportId: String) async throws {
+        let auth = try AuthManager.instance.getAuthUser()
+        let result = try await AuthManager.instance.getFSUser(user: auth)
+        try await ReportManager.instance.addLike(reportId: reportId, author: result.fullname ?? "")
+    }
+    
+    func delLike(reportId: String, likeId: String) async throws {
+        try await ReportManager.instance.delLike(reportId: reportId, likeId: likeId)
+    }
 }
 
 struct DetailReportView: View {
     @Environment(\.presentationMode) var presentation
     @State private var changeStatusDialog: Bool = false
-    @StateObject private var viewModel = DetailReportViewModel()
+    @StateObject private var viewModel = ReportDetailView()
     
     var data: ReportModel?
     
@@ -33,7 +48,7 @@ struct DetailReportView: View {
             ScrollView(.vertical, showsIndicators: false, content: {
                 VStack(spacing: 10) {
                     Text(data?.title ?? "")
-                        .font(.custom("Poppins-Bold", size: 30))
+                        .font(.system(size: 30))
                         .padding(.top, 20)
                     WebImage(url: URL(string: data?.imgPath ?? ""))
                         .resizable()
@@ -42,6 +57,7 @@ struct DetailReportView: View {
                                 .font(.title)
                                 .frame(height: UIScreen.main.bounds.height * 0.3)
                                 .frame(maxWidth: .infinity)
+                                .cornerRadius(10)
                         })
                         .onFailure(perform: { _ in
                             VStack(spacing: 16) {
@@ -51,23 +67,33 @@ struct DetailReportView: View {
                             }
                         })
                         .scaledToFit()
+                        .cornerRadius(10)
                         .frame(height: UIScreen.main.bounds.height * 0.2)
                         .frame(maxWidth: .infinity)
                         .frame(alignment: .center)
+                        .cornerRadius(10)
                         .padding(.top, 20)
+                    
+                    
+                    ///////Testo
+                    
                     HStack{
                         VStack{
                             Text(data?.status ?? "")
-                                .font(.custom("Poppins-Bold", size: 12))
+                                .font(.system(size: 12))
                                 .foregroundStyle(.white)
                                 .padding()
+                            
                         }
                         .frame(width: 150, height: 30)
                         .background(getBackgroundColor(for: data?.status))
                         .cornerRadius(10)
+                        
+                        Spacer()
+                        
                         VStack{
                             Text(data?.instance ?? "")
-                                .font(.custom("Poppins-Bold", size: 12))
+                                .font(.system(size: 12))
                                 .foregroundStyle(.white)
                                 .padding()
                         }
@@ -75,48 +101,160 @@ struct DetailReportView: View {
                         .frame(maxWidth: .infinity)
                         .background(.accent)
                         .cornerRadius(10)
+                        .frame(width: 150, height: 30)
+                        
+                        Spacer()
+                        
+                        ///like
+                        VStack{
+                            HStack{
+                                HStack(alignment: .lastTextBaseline){
+                                    Button(action: {
+                                        if viewModel.isLiked {
+                                            Task {
+                                                do {
+                                                    try await viewModel.delLike(reportId: data?.id ?? "", likeId: viewModel.like?.id ?? "")
+                                                    viewModel.allLikes = try await ReportManager.instance.loadAllLikes(reportId: data?.id ?? "")
+                                                    viewModel.like = ReportManager.instance.filterModel(by: data?.fullname ?? "", in: viewModel.allLikes)
+                                                    viewModel.isLiked = false
+                                                }
+                                            }
+                                        } else {
+                                            Task {
+                                                do {
+                                                    try await viewModel.addLike(reportId: data?.id ?? "")
+                                                    viewModel.allLikes = try await ReportManager.instance.loadAllLikes(reportId: data?.id ?? "")
+                                                    viewModel.like = ReportManager.instance.filterModel(by: data?.fullname ?? "", in: viewModel.allLikes)
+                                                    viewModel.isLiked = true
+                                                }
+                                            }
+                                        }
+                                    }, label: {
+                                        Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")                                .foregroundStyle(.white)
+                                    })
+                                    VStack(alignment:.trailing){
+                                        Text("\(viewModel.allLikes.count)")
+                                            .font(.system(size: 14))
+                                            .foregroundStyle(.white)
+                                            .padding(.leading,-5)
+                                    }
+                                    
+                                }
+                            }
+                        }
+                        .frame(height: 30)
+                        .frame(maxWidth: .infinity)
+                        .background(.accent)
+                        .cornerRadius(10)
+                        .frame(width: 55, height: 30)
                     }
                     .padding(.top, 20)
+                    .padding(.horizontal)
+                    
+                    
+                    //Mark
+                    //                    HStack{
+                    //                        HStack(alignment: .lastTextBaseline){
+                    //                            Button(action: {
+                    //                                if viewModel.isLiked {
+                    //                                    Task {
+                    //                                        do {
+                    //                                            try await viewModel.delLike(reportId: data?.id ?? "", likeId: viewModel.like?.id ?? "")
+                    //                                            viewModel.allLikes = try await ReportManager.instance.loadAllLikes(reportId: data?.id ?? "")
+                    //                                            viewModel.like = ReportManager.instance.filterModel(by: data?.fullname ?? "", in: viewModel.allLikes)
+                    //                                            viewModel.isLiked = false
+                    //                                        }
+                    //                                    }
+                    //                                } else {
+                    //                                    Task {
+                    //                                        do {
+                    //                                            try await viewModel.addLike(reportId: data?.id ?? "")
+                    //                                            viewModel.allLikes = try await ReportManager.instance.loadAllLikes(reportId: data?.id ?? "")
+                    //                                            viewModel.like = ReportManager.instance.filterModel(by: data?.fullname ?? "", in: viewModel.allLikes)
+                    //                                            viewModel.isLiked = true
+                    //                                        }
+                    //                                    }
+                    //                                }
+                    //                            }, label: {
+                    //                                Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")                                .foregroundStyle(.white)
+                    //                            })
+                    //                            VStack(alignment:.trailing){
+                    //                                Text("\(viewModel.allLikes.count)")
+                    //                                    .font(.system(size: 14))
+                    //                                    .foregroundStyle(.white)
+                    //                                    .padding(.leading,-5)
+                    //                            }
+                    //
+                    //                        }
+                    //                    }
+                    //                    .frame(height: 30)
+                    //                    .frame(maxWidth: .infinity)
+                    //                    .background(.accent)
+                    //                    .cornerRadius(10)
                     
                     HStack{
                         Image(systemName: "person.fill")
                         VStack{
-                            Text("Nama Pelapor")
-                                .font(.custom("Poppins-Bold", size: 14))
+                            Text("NamaLengkap")
+                                .font(.system(size: 14))
                             Text(data?.fullname ?? "")
-                                .font(.custom("Poppins-Regular", size: 12))
+                                .font(.system(size: 12))
+                        }
+                    }
+                    .padding(.top, 20)
+                    HStack{
+                        HStack{
+                            Image(systemName: "calendar")
+                            VStack(alignment: .leading){
+                                Text("Tanggal Lengkap")
+                                    .font(.system(size: 14))
+                                Text(String(date: data?.date ?? Date(), format: "dd-mm-yy"))
+                                    .font(.system(size: 12))
+                            }
+                        }
+                        .padding(.trailing,20)
+                        
+                        VStack{
+                            Image(systemName: "mappin")
+                            VStack{
+                                Button("Semarang") {
+                                    UIApplication.shared.open(URL(string: "comgooglemaps://?q=\(data?.latitude ?? 0),\(data?.longitude ?? 0)")!)
+                                }
+                                .font(.system(size: 12))
+                                .foregroundStyle(.black)
+                            }
                         }
                     }
                     .padding(.top, 20)
                     
-                    HStack{
-                        Image(systemName: "calendar")
-                        VStack{
-                            Text("Tanggal Laporan")
-                                .font(.custom("Poppins-Bold", size: 14))
-                            Text(String(date: data?.date ?? Date(), format: "dd MMMM yyy"))
-                                .font(.custom("Poppins-Regular", size: 12))
-                        }
-                    }
                     
+                    
+                    ///Deskripsilengkap
                     Text("Deskripsi Lengkap")
-                        .font(.custom("Poppins-Bold", size: 20))
+                        .font(.system( size: 20))
                         .padding(.top, 20)
                     
                     Text(data?.desc ?? "")
-                        .font(.custom("Poppins-Regular", size: 12))
+                        .font(.system(size: 12))
+                        .padding(.horizontal)
                     
                     Button(action: {
-                        if viewModel.userRole == "admin" {
+                        if viewModel.user.role == "admin" {
                             changeStatusDialog.toggle()
                         }
+                        
                     }, label: {
                         CustomButtonChangeView(name: "Ubah Status")
                     })
+                    
                 }
                 .padding()
+               
+                
             })
         }
+        
+        ///ConfirmationDialog
         .confirmationDialog("", isPresented: $changeStatusDialog) {
             Button("Posted") {
                 Task {
@@ -126,10 +264,10 @@ struct DetailReportView: View {
                     }
                 }
             }
-            Button("Process") {
+            Button("Proses") {
                 Task {
                     do {
-                        try await viewModel.changeStatus(to: "Process", reportId: data?.id ?? "")
+                        try await viewModel.changeStatus(to: "Proses", reportId: data?.id ?? "")
                         presentation.wrappedValue.dismiss()
                     }
                 }
@@ -146,12 +284,16 @@ struct DetailReportView: View {
             Text("Ubah status laporan")
         }
         
+        
+        ///Apeareance
         .onAppear(perform: {
             Task {
                 do {
                     let auth = try AuthManager.instance.getAuthUser()
-                    let result = try await AuthManager.instance.getFSUser(user: auth)
-                    viewModel.userRole = result.role ?? ""
+                    viewModel.user = try await AuthManager.instance.getFSUser(user: auth)
+                    viewModel.allLikes = try await ReportManager.instance.loadAllLikes(reportId: data?.id ?? "")
+                    viewModel.isLiked = ReportManager.instance.checkLike(array: viewModel.allLikes, query: viewModel.user.fullname ?? "")
+                    viewModel.like = ReportManager.instance.filterModel(by: viewModel.user.fullname ?? "", in: viewModel.allLikes)
                 } catch {
                     print("Error getting user role:", error.localizedDescription)
                 }
@@ -162,11 +304,15 @@ struct DetailReportView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
-                    Text("Tambah Laporan")
-                        .font(.custom("Poppins-Bold", size: 20))
+                    Text("Detail Laporan")
+                        .font(.system(size: 21))
+                        .fontWeight(.bold)
                         .foregroundColor(.white)
                 }
             }
+            
+            
+            ///Tollbar
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     presentation.wrappedValue.dismiss()
@@ -177,16 +323,16 @@ struct DetailReportView: View {
             }
         }
         .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color(hex: LB.AppColors.primaryColor), for: .navigationBar)
+        .toolbarBackground(Color(hex: LB.Colors.primaryColor), for: .navigationBar)
     }
     func getBackgroundColor(for status: String?) -> Color {
         switch status {
         case "Posted":
-            return Color(hex: LB.AppColors.dangerColor)
-        case "Process":
-            return Color(hex: LB.AppColors.warningColor)
+            return Color(hex: LB.Colors.dangerColor)
+        case "Proses":
+            return Color(hex: LB.Colors.warningColor)
         case "Done":
-            return Color(hex: LB.AppColors.successColor)
+            return Color(hex: LB.Colors.successColor)
         default:
             return Color.gray
         }
@@ -195,6 +341,6 @@ struct DetailReportView: View {
 
 #Preview {
     NavigationStack {
-        DetailReportView(data: ReportModel(date: Date(), id: "12345", desc: "Deskripsi", imgFilename: "", imgPath: "", instance: "Suatu Instansi", title: "", userId: "", fullname: "Nama Pelapor", status: "Done"))
+        DetailReportView(data: ReportModel(date: Date(), id: "12345", desc: "Deskripsi", imgFilename: "", imgPath: "", instance: "Suatu Instansi", title: "", userId: "", fullname: "Nama Pelapor", status: "Done", latitude: 0, longitude: 0))
     }
 }
