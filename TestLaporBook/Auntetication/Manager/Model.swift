@@ -52,3 +52,10 @@ struct ReportModel: Hashable, Codable {
     let latitude: Double?
     let longitude: Double?
 }
+
+struct CommentModel: Hashable, Codable {
+    let date: Date?
+    let content: String?
+    let author: String?
+    let id: String?
+}

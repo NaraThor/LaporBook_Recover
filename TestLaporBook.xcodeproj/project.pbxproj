@@ -59,6 +59,8 @@
 		49B888812B3C818300AFE619 /* MyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B888802B3C818300AFE619 /* MyReportView.swift */; };
 		49B888832B3C81AA00AFE619 /* AddReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B888822B3C81AA00AFE619 /* AddReportView.swift */; };
 		49BB3EF62B456BCE00860D81 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 49BB3EF52B456BCE00860D81 /* SDWebImageSwiftUI */; };
+		49C110442B61FBF4008847E5 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C110432B61FBF4008847E5 /* MessageView.swift */; };
+		49C110462B6212BA008847E5 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C110452B6212BA008847E5 /* MessageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +89,8 @@
 		49B8887E2B3C815E00AFE619 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		49B888802B3C818300AFE619 /* MyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReportView.swift; sourceTree = "<group>"; };
 		49B888822B3C81AA00AFE619 /* AddReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReportView.swift; sourceTree = "<group>"; };
+		49C110432B61FBF4008847E5 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		49C110452B6212BA008847E5 /* MessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +216,7 @@
 				49B888702B3C802A00AFE619 /* Model.swift */,
 				49B8886E2B3C800A00AFE619 /* AuthManager.swift */,
 				493FB26A2B456349001D41A8 /* ReportManager.swift */,
+				49C110452B6212BA008847E5 /* MessageManager.swift */,
 				493FB26C2B456374001D41A8 /* StorageManager.swift */,
 				493FB26E2B4563A1001D41A8 /* LocationManager.swift */,
 			);
@@ -225,6 +230,7 @@
 				4918BD842B48A72F002DCE31 /* ProfileView.swift */,
 				49B8887E2B3C815E00AFE619 /* DashboardView.swift */,
 				49B888802B3C818300AFE619 /* MyReportView.swift */,
+				49C110432B61FBF4008847E5 /* MessageView.swift */,
 				49B888822B3C81AA00AFE619 /* AddReportView.swift */,
 				493FB2742B456467001D41A8 /* ReportDetailView.swift */,
 			);
@@ -342,6 +348,7 @@
 				4918BD892B48CF37002DCE31 /* DataView.swift in Sources */,
 				49B888752B3C809D00AFE619 /* Extensions.swift in Sources */,
 				493FB26B2B456349001D41A8 /* ReportManager.swift in Sources */,
+				49C110442B61FBF4008847E5 /* MessageView.swift in Sources */,
 				493FB2732B45644A001D41A8 /* ReportCardView.swift in Sources */,
 				493FB2692B45624A001D41A8 /* ImagePicker.swift in Sources */,
 				493FB2752B456467001D41A8 /* ReportDetailView.swift in Sources */,
@@ -352,6 +359,7 @@
 				49B888772B3C80CD00AFE619 /* Templates.swift in Sources */,
 				49B888252B3C74C200AFE619 /* TestLaporBookApp.swift in Sources */,
 				49B8887D2B3C813700AFE619 /* LoginView.swift in Sources */,
+				49C110462B6212BA008847E5 /* MessageManager.swift in Sources */,
 				49B888812B3C818300AFE619 /* MyReportView.swift in Sources */,
 				49B888712B3C802A00AFE619 /* Model.swift in Sources */,
 				49B888832B3C81AA00AFE619 /* AddReportView.swift in Sources */,

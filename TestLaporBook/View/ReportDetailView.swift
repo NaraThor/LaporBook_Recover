@@ -10,8 +10,12 @@ import MapKit
 import SDWebImageSwiftUI
 
 @MainActor
-final class ReportDetailView: ObservableObject {
+final class DetailReportViewModel: ObservableObject {
     @Published var user: FSUser = FSUser(uid: "", email: "", fullname: "", phone: "", role: "")
+    
+    @Published var comment: String = ""
+    @Published var allComments: [CommentModel] = []
+    
     @Published var isLiked: Bool = false
     
     @Published var allLikes: [LikeModel] = []
@@ -34,12 +38,19 @@ final class ReportDetailView: ObservableObject {
     func delLike(reportId: String, likeId: String) async throws {
         try await ReportManager.instance.delLike(reportId: reportId, likeId: likeId)
     }
+    
+    func addComm(reportId: String) async throws {
+        let auth = try AuthManager.instance.getAuthUser()
+        let result = try await AuthManager.instance.getFSUser(user: auth)
+        try await ReportManager.instance.createComment(reportId: reportId, content: self.comment, author: result.fullname ?? "")
+    }
 }
 
 struct DetailReportView: View {
     @Environment(\.presentationMode) var presentation
     @State private var changeStatusDialog: Bool = false
-    @StateObject private var viewModel = ReportDetailView()
+    @State private var addComentDetent: Bool = false
+    @StateObject private var viewModel = DetailReportViewModel()
     
     var data: ReportModel?
     
@@ -238,6 +249,7 @@ struct DetailReportView: View {
                         .font(.system(size: 12))
                         .padding(.horizontal)
                     
+                    //button edit
                     Button(action: {
                         if viewModel.user.role == "admin" {
                             changeStatusDialog.toggle()
@@ -247,10 +259,59 @@ struct DetailReportView: View {
                         CustomButtonChangeView(name: "Ubah Status")
                     })
                     
+                    //button ubah status
+                    
+                    
+                    //Komentar ygy
+                    NavigationLink(destination: MessageView(reportId: data?.id ?? "")){
+                        CustomButtonChangeView(name: "Tambah Komentar")
+                    }
+                    .padding(.top,-10)
+                    
+                    Text("List Komentar")
+                        .fontWeight(.bold)
+                        .font(.system( size: 20))
+                        .padding(.top, 30)
+                    VStack{
+                        VStack{
+                            if viewModel.allComments.isEmpty {
+                                VStack(alignment: .leading, spacing: 1){
+                                    Text("Komentar masih kosong")
+                                        .font(.system( size: 14))
+                                        .foregroundStyle(.white)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 100)
+                                .background(Color.accentColor)
+                                .cornerRadius(10)
+                            } else {
+                                ForEach(viewModel.allComments, id: \.self) { comment in
+                                    VStack{
+                                        Text(comment.author ?? "")
+                                            .font(.system( size: 14))
+                                            .foregroundStyle(.white)
+                                        Text(comment.content ?? "")
+                                            .font(.system( size: 12))
+                                            .foregroundStyle(.white)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 60)
+                                    .background(Color.accentColor)
+                                  
+                                    
+                                }
+                            }
+                            
+                            
+                            //ini di loop
+                        }
+                        
+                    }
+                    
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .cornerRadius(30)
                 }
-                .padding()
-               
-                
             })
         }
         
@@ -285,12 +346,20 @@ struct DetailReportView: View {
         }
         
         
+        ///Ubah Status Button
+        
+        
+        
+        
+        
+        
         ///Apeareance
         .onAppear(perform: {
             Task {
                 do {
                     let auth = try AuthManager.instance.getAuthUser()
                     viewModel.user = try await AuthManager.instance.getFSUser(user: auth)
+                    viewModel.allComments = try await ReportManager.instance.loadAllComments(reportId: data?.id ?? "")
                     viewModel.allLikes = try await ReportManager.instance.loadAllLikes(reportId: data?.id ?? "")
                     viewModel.isLiked = ReportManager.instance.checkLike(array: viewModel.allLikes, query: viewModel.user.fullname ?? "")
                     viewModel.like = ReportManager.instance.filterModel(by: viewModel.user.fullname ?? "", in: viewModel.allLikes)
@@ -325,6 +394,9 @@ struct DetailReportView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(Color(hex: LB.Colors.primaryColor), for: .navigationBar)
     }
+    
+    
+    
     func getBackgroundColor(for status: String?) -> Color {
         switch status {
         case "Posted":
